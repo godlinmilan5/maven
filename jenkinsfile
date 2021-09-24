@@ -1,0 +1,23 @@
+   
+pipeline {
+    agent any
+
+    stages {
+        stage('SCM') {
+            steps {
+                git branch: 'war', url: 'https://github.com/godlinmilan5/Mavan.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                bat 'mvn clean'
+                 bat 'mvn install'
+            }
+        }
+        stage('deploy') {
+            steps {
+            deploy adapters: [tomcat9(credentialsId: 'webserver', path: '', url: 'http://localhost:8080/manager/html')], contextPath: 'newdep', war: '**/*.war'    
+            }
+        } 
+    }
+}
